@@ -10,7 +10,7 @@ class DetailsApi {
     final request = await http.get(
       Uri.https(
         "asos2.p.rapidapi.com",
-        "/products//v3/detail",
+        "/products/v3/detail", 
         {
           'id': '$id',
           'lang': 'en-US',
@@ -20,7 +20,7 @@ class DetailsApi {
         },
       ),
       headers: {
-        'X-RapidAPI-Key': '8d3d01b3a5msh8b59f5a4b017291p19be5ajsnaa518c6a3c27',
+        'X-RapidAPI-Key': 'fcc0eaa4cdmsh0338277ee92f87bp1f904fjsn3b184ce2879f',
         'X-RapidAPI-Host': 'asos2.p.rapidapi.com'
       },
     );

@@ -35,18 +35,23 @@ class Details {
     this.gender = map["gender"];
     this.productCode = map["productCode"];
     this.brand = [];
-    (map["brand"])
-        .forEach((element) => this.brand.add(Brand.FromJson(element)));
+
+    // (map["brand"])
+    //     .forEach((element) => this.brand.add(Brand.FromJson(element)));
     this.isInStock = map["isInStock"];
+
     this.variants = [];
     (map["variants"])
         .forEach((element) => this.variants.add(Variants.fromjson(element)));
+
     this.media = [];
-    (map["media"])
-        .forEach((element) => this.media.add(Media.FromJson(element)));
+    // (map["media"])
+    //     .forEach((element) => this.media.add(Media.FromJson(element)));
+    print('-----1-1--');
     this.price = [];
-    (map["price"])
-        .forEach((element) => this.price.add(Price.fromJson(element)));
+    // (map["price"])
+    //     .forEach((element) => this.price.add(Price.fromJson(element)));
+    print('-----1-1--1');
   }
 
   Map<String, dynamic> toJson() {

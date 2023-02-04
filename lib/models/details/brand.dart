@@ -8,7 +8,9 @@ class Brand {
   });
 
   Brand.FromJson(Map<String, dynamic> map) {
+
     this.brandId = map["brandId"];
+
     this.name = map["name"];
   }
 
