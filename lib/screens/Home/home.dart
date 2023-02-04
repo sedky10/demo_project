@@ -3,11 +3,11 @@ import 'package:demo_project/contatnts.dart';
 import 'package:demo_project/models/product%20list/mainmodel.dart';
 import 'package:demo_project/screens/Home/Widgets/categories.dart';
 import 'package:demo_project/screens/Home/Widgets/category.dart';
+import 'package:demo_project/screens/Home/Widgets/searchbar.dart';
 import 'package:demo_project/screens/product%20details/details.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../Network/ProductsAPI.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'Widgets/appbar.dart';
 
@@ -25,140 +25,149 @@ class _HomeState extends State<Home> {
   List indexList = [0, 1, 2, 3];
   String category = '';
   int? id;
+  List categories = [
+    "Jeans",
+    "Sneakers",
+    "Accessories",
+    "Shirts",
+  ];
+  List categorisid = [4208, 4209, 4210, 3136];
+  int initial = 4208;
 
   @override
   Widget build(BuildContext context) {
-    List categories = [
-      "Jeans",
-      "Sneakers",
-      "Accessories",
-      "Shirts",
-    ];
     return Scaffold(
       backgroundColor: Constants.thirdColor,
       body: SafeArea(
-        child: Column(
-          children: [
-            const TopBar(),
-            Container(
-              width: MediaQuery.of(context).size.width - 40,
-              height: 50,
-              margin: const EdgeInsets.symmetric(vertical: 20),
-              child: TextFormField(
-                cursorColor: Constants.secondryColor,
-                style: TextStyle(
-                  color: Constants.primaryColor,
-                  fontFamily: 'Ubuntu',
-                  letterSpacing: 1.2,
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  hintText: 'Search item',
-                  suffixIcon: const Icon(Icons.search),
-                  suffixIconColor: Constants.secondryColor,
-                ),
-              ),
-            ),
-            Container(
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => CategoriesList(
-                        text: categories[index],
-                        function: () {
-                          setState(() {
-                            indexCategory = indexList[index];
-                            category = categories[index];
-                          });
-                        },
-                        color: indexCategory == indexList[index]
-                            ? Constants.forthcolor
-                            : Colors.grey[350],
-                      ),
-                  separatorBuilder: (context, index) => const SizedBox(
-                        width: 0,
-                      ),
-                  itemCount: categories.length),
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
-              margin: const EdgeInsets.all(20),
-              child: Text(
-                'Items',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'Ubuntu',
-                  letterSpacing: 1.25,
-                  fontWeight: FontWeight.w600,
-                  color: Constants.primaryColor,
-                ),
-              ),
-            ),
-            FutureBuilder<MainModel>(
-              future: ProductsAPI().GetProducts(4210),
-              builder: (BuildContext context, snapshot) {
-                if (snapshot.hasData) {
-                  object = snapshot.data!;
-                  print(object);
-                  return Container(
-                    height: 390,
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    child: GridView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 15,
-                        mainAxisSpacing: 15,
-                        mainAxisExtent: 290,
-                      ),
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: snapshot.data!.products.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              AnimationTransition(
-                                page: ProductDetails(
-                                  id:snapshot.data!.products.elementAt(index).id,
-                                ),
+        child: Expanded(
+          child: Column(
+            children: [
+              const TopBar(),
+              SingleChildScrollView(
+                controller: controller,
+                child: Column(
+                  children: [
+                    const SearchBar(),
+                    Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) => CategoriesList(
+                                text: categories[index],
+                                function: () {
+                                  setState(() {
+                                    initial = categorisid[index];
+                                    indexCategory = indexList[index];
+                                    category = categories[index];
+                                  });
+                                },
+                                color: indexCategory == indexList[index]
+                                    ? Constants.forthcolor
+                                    : Colors.grey[350],
                               ),
-                            );
-                          },
-                          child: CategoryView(
-                              image: snapshot.data!.products
-                                  .elementAt(index)
-                                  .imageUrl,
-                              id: snapshot.data!.products.elementAt(index).id,
-                              name:
-                                  snapshot.data!.products.elementAt(index).name,
-                              price: 120),
+                          separatorBuilder: (context, index) => const SizedBox(
+                                width: 0,
+                              ),
+                          itemCount: categories.length),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: const EdgeInsets.all(20),
+                      child: Text(
+                        'Items',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: 'Ubuntu',
+                          letterSpacing: 1.25,
+                          fontWeight: FontWeight.w600,
+                          color: Constants.primaryColor,
+                        ),
+                      ),
+                    ),
+                    FutureBuilder<MainModel>(
+                      future: ProductsAPI().GetProducts(initial),
+                      builder: (BuildContext context, snapshot) {
+                        if (snapshot.hasData) {
+                          object = snapshot.data!;
+                          print(object);
+                          return Container(
+                            height: 390,
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
+                            child: GridView.builder(
+                              controller: controller,
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 15,
+                                mainAxisSpacing: 15,
+                                mainAxisExtent: 290,
+                              ),
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: snapshot.data!.products.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      AnimationTransition(
+                                        page: ProductDetails(
+                                          image: snapshot.data!.products
+                                              .elementAt(index)
+                                              .imageUrl,
+                                          id: snapshot.data!.products
+                                              .elementAt(index)
+                                              .id,
+                                          name: snapshot.data!.products
+                                              .elementAt(index)
+                                              .name,
+                                          price: snapshot.data!.products
+                                              .elementAt(index)
+                                              .price.current.value,
+                                          color: snapshot.data!.products
+                                              .elementAt(index) 
+                                              .colour,
+                                        ),
+                                      ),
+                                    );
+                                  }, 
+                                  child: CategoryView(
+                                      image: snapshot.data!.products
+                                          .elementAt(index)
+                                          .imageUrl,
+                                      id: snapshot.data!.products
+                                          .elementAt(index)
+                                          .id,
+                                      name: snapshot.data!.products
+                                          .elementAt(index)
+                                          .name,
+                                      price: snapshot.data!.products
+                                          .elementAt(index)
+                                          .price.current.value,)
+                                );
+                              },
+                            ),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          print(snapshot.error);
+                          // print(snapshot.data);
+                          return Center(
+                            child: Text(snapshot.error.toString()),
+                          );
+                        }
+                        return CircularProgressIndicator(
+                          color: Constants.secondryColor,
                         );
                       },
                     ),
-                  );
-                }
-                if (snapshot.hasError) {
-                  print(snapshot.error);
-                  // print(snapshot.data);
-                  return Center(
-                    child: Text(snapshot.error.toString()),
-                  );
-                }
-                return CircularProgressIndicator(
-                  color: Constants.secondryColor,
-                );
-              },
-            ),
-          ],
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

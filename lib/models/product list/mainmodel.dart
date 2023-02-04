@@ -18,9 +18,11 @@ class MainModel {
     this.itemCount = map["itemCount"];
     print('-----18----');
     this.products = [];
+    // print(map['products']);
     (map["products"])
         .forEach((element) => this.products.add(Products.FromJson(element)));
     print('-----13----');
+
    }
 
   Map<String, dynamic> toJson() {

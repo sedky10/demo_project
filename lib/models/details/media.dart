@@ -6,6 +6,7 @@ class Media {
   Media({required this.images});
 
   Media.FromJson(Map<String, dynamic> map) {
+
     this.images = [];
     (map['images']).forEach((element) {
       this.images.add(Images.FromJson(element));

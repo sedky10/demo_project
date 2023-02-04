@@ -23,7 +23,7 @@ class CategoriesList extends StatelessWidget {
             borderRadius: BorderRadius.circular(15)),
         child: Text(
           text!,
-          style: TextStyle(
+          style: TextStyle( 
             color: Constants.primaryColor,
             fontFamily: 'Ubuntu',
             letterSpacing: 1.5,
